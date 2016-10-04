@@ -20,12 +20,12 @@
 */
 
 var ApiDocumentor = function(options){
-	
+
 	// integrate the options
 	options && _.extend(this,options);
 
 	this.fetch = function(url){
-		
+
 		if(url){
 			$.ajax({
 		      url: url,
@@ -37,9 +37,9 @@ var ApiDocumentor = function(options){
 		    });
 		}
 		else console.log("No schemaUri specified, try ApiDocumentor.fetch('/scheme.json').");
-		
+
 	};
-	
+
 	this.render = function(){
 
     // make sure the templates are set
@@ -59,16 +59,20 @@ var ApiDocumentor = function(options){
 
     // main section template
     var section_template = _.template(this.section_template);
-    
+
     // inner templates
     var inner_templates = {};
     inner_templates.action_template = _.template(this.action_template);
-    inner_templates.example_template = _.template(this.example_template);
-
+		var example_template = {};
+    // inner_templates.example_template = _.template(this.example_template);
+		example_template.example_template = _.template(this.example_template);
     // insert the sections one by one
     $target = this.target;
+		$example = this.exampleTarget;
+		
     this.model && this.model.sections && _.each(this.model.sections, function(section){
-      $target.append(section_template({section: section,templates: inner_templates}));
+      $target.append(section_template({section: section, templates: inner_templates}));
+			$example.append(section_template({section: section, templates: example_template}))
     });
 
     // once everything is drawn, create the summary
@@ -82,14 +86,14 @@ var ApiDocumentor = function(options){
     	// activate response/payload examples (dynamic loading)
     	this.activateDynamicFixtures();
     }
-    
+
     // activate hide/show examples
-    this.activateExamples();	
+    this.activateExamples();
 
     // color what needs to be colored
     $('.uncolored code').each(function(){
     	$this = $(this);
-     	Rainbow.color($this.html(),'javascript',function(colored){ $this.html(colored); } ); 
+     	Rainbow.color($this.html(),'javascript',function(colored){ $this.html(colored); } );
  	  });
 
   };
@@ -107,7 +111,7 @@ var ApiDocumentor = function(options){
 
   	// Add each section to the summary
   	this.model && this.model.sections && _.each(this.model.sections, function(section){
-		
+
 			// get the title from the <div class=title></div>
 	    var section_title = section.title;
 
@@ -118,7 +122,7 @@ var ApiDocumentor = function(options){
 	    var section_el = $("<li><a href=#"+section_uri+">"+section_title+"</a><div class=clearfix></div><ul class=action-titles></ul><ul class=end-points></ul></li>");
 
 	    // Add the html element to the api list element
-	    section_list.append(section_el);	
+	    section_list.append(section_el);
 
 			section.actions && (section.actions.length > 0) && _.each(section.actions, function(action){
 
@@ -154,10 +158,10 @@ var ApiDocumentor = function(options){
 		  $this = $(this);
 
 		  this.code_el = $this.find('code');
-		  
+
 		  // get the fixture uri for the data-fixture attribute in the <code> element
 		  var fixture_uri = this.code_el.data('fixture');
-		  
+
 		  fetchFixture(fixture_uri,this);
 
 		});
@@ -173,11 +177,11 @@ var ApiDocumentor = function(options){
 		$(".example-response.unloaded").each(function(){
 
 		  this.code_el = $(this).find('code');
-		  
+
 		  // get the fixture uri for the data-fixture attribute in the <code> element
 		  var fixture_uri = this.code_el.data('fixture');
-		  
-			fetchFixture(fixture_uri,this);		  
+
+			fetchFixture(fixture_uri,this);
 
 		});
 
@@ -235,7 +239,7 @@ var ApiDocumentor = function(options){
 
   //       // Get all the action from the section
   //       var actions = $(this).find(".action");
-        
+
   //       // if there are actions in this section
   //       if(actions.length > 0){
 
@@ -291,5 +295,5 @@ var ApiDocumentor = function(options){
 
   //     console.log(JSON.stringify(scheme));
   //   }
-    
+
 };

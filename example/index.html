@@ -12,29 +12,39 @@
 
 	<meta name="viewport" content="width=device-width">
 
-	<link rel="stylesheet" href="css/style.css">
-	<link href="css/theme.css" rel="stylesheet" type="text/css">
+	<!-- <link rel="stylesheet" href="css/style.css"> -->
+	<!-- <link href="css/theme.css" rel="stylesheet" type="text/css"> -->
+	<link href="//bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header>
+<!-- <header>
 	<h1> Rest API </h1>
-</header>
-<div class="main">
+</header> -->
+<!-- <div class="main">
 
 	<div class="section">
 		<div class="title">Summary</div>
-		<div class="summary-container"><!-- This zone is AUTOMATICALLY populated--></div>
+		<div class="summary-container"></div>
 		<div class="clearfix"></div>
 	</div>
 
 
-</div>
-<footer>
-</footer>
+</div> -->
 
-<script src="js/libs/jquery-1.7.1.min.js"></script>
-<script src="js/libs/rainbow-custom.min.js"></script>
-<script src="js/libs/underscore.js"></script>
+<div class="container-fluid">
+
+	<div class="row">
+		   <div class="col-md-3" style="color:white; background:black; height: 100%" id="sidebar"></div>
+			 <div class="col-md-5" id="main"></div>
+			 <div class="col-md-4" id="curl" style="color:white; background:black; height: 100%"></div>
+	</div>
+
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 <script src="js/api-documentor.js"></script>
 
 <script>
@@ -46,23 +56,25 @@ $(document).ready(function() {
       section_template: $('#section-template').html(),
       action_template: $('#action-template').html(),
       example_template: $('#example-template').html(),
-      
+
       // wherever you want the api actions to be appended
-      target: $(".main"), 
-      
+      target: $("#main"),
+
       // set to true if you want a summary to be generated
-      generateSummary: true, 
-      
+      generateSummary: true,
+
+			exampleTarget: $("#curl"),
+
       // where you want the summary to be appended (if generateSummary: true)
-      summaryTarget: $('.summary-container'), 
-      
+      summaryTarget: $('#sidebar'),
+
       // set to true if you want to load external fixtures automatically
       // if set to false, loads when user clicks
-      autoLoadFixtures: true 
+      autoLoadFixtures: true
     });
 
     AD.fetch('scheme.json');
-    
+
 });
 </script>
 
@@ -75,7 +87,7 @@ $(document).ready(function() {
 
   <!-- API SECTION -->
   <div class="section" id="<%=encodeURI(section.title.replace(' ','_'))%>">
-    
+
     <!-- Section title -->
     <div class="title"><%=section.title%></div>
 
@@ -135,7 +147,7 @@ $(document).ready(function() {
           <% _.each(action.examples, function(example){ %>
 
             <%= templates && templates.example_template && templates.example_template({ example: example }) %>
-          
+
           <% }); %>
         <% } %>
 
@@ -147,7 +159,7 @@ $(document).ready(function() {
 
 <!--  EXAMPLE VIEW      -->
 <script type="text/template" id="example-template">
-  
+
   <div class="subtitle"><%=example.title%>:</div>
 
   <!-- Request example -->
@@ -161,17 +173,17 @@ $(document).ready(function() {
 
   <% if(example.payload){%>
     <div class="subtitle">Payload:</div>
-    <% if(typeof example.payload === "object" && example.payload.url) { %> 
+    <% if(typeof example.payload === "object" && example.payload.url) { %>
     <div class="example-response unloaded">
-      <pre><code data-fixture=<%=example.payload.url%>><%=example.payload.url%></code></pre>  
+      <pre><code data-fixture=<%=example.payload.url%>><%=example.payload.url%></code></pre>
     </div>
-    <% } else if(typeof example.payload === "string") { %> 
+    <% } else if(typeof example.payload === "string") { %>
     <div class="example-response loaded">
-      <pre><code><%=example.payload%></code></pre>  
+      <pre><code><%=example.payload%></code></pre>
     </div>
-    <% } else { %> 
+    <% } else { %>
     <div class="example-response loaded uncolored">
-      <pre><code><%=JSON.stringify(example.payload, null, 2)%></code></pre>  
+      <pre><code><%=JSON.stringify(example.payload, null, 2)%></code></pre>
     </div>
     <% }%>
 
@@ -179,21 +191,21 @@ $(document).ready(function() {
 
   <% if(example.response){%>
     <div class="subtitle">Response:</div>
-    <% if(typeof example.response === "object" && example.response.url) { %> 
+    <% if(typeof example.response === "object" && example.response.url) { %>
     <div class="example-response unloaded">
-      <pre><code data-fixture=<%=example.response.url%>><%=example.response.url%></code></pre>  
+      <pre><code data-fixture=<%=example.response.url%>><%=example.response.url%></code></pre>
     </div>
-    <% } else if(typeof example.response === "string") { %> 
+    <% } else if(typeof example.response === "string") { %>
     <div class="example-response loaded">
-      <pre><code><%=example.response%></code></pre>  
+      <pre><code><%=example.response%></code></pre>
     </div>
-    <% } else { %> 
+    <% } else { %>
     <div class="example-response loaded uncolored">
-      <pre><code><%=JSON.stringify(example.response, null, 2)%></code></pre>  
+      <pre><code><%=JSON.stringify(example.response, null, 2)%></code></pre>
     </div>
     <% }%>
   <% } %>
-  
+
   <br>
 </script>
 
